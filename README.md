@@ -1,6 +1,6 @@
 # Calc Pozo Fecales
 ### Calculador de Pozo de Bombeo de Aguas Residuales Fecales
-**Versión actual:** v2.3 | **Normativa:** CTE DB-HS5 (Tabla 4.1) | **Tecnología:** HTML5 + JS (autocontenido)
+**Versión actual:** v2.4 | **Normativa:** CTE DB-HS5 (Tabla 4.1) | **Tecnología:** HTML5 + JS (autocontenido)
 
 ---
 
@@ -102,6 +102,16 @@ La herramienta es un archivo HTML autocontenido, sin dependencias externas de se
 ---
 
 ## Bitácora de desarrollo
+
+### v2.4 — 2026-06-17
+**Cambios:**
+- **Módulo 3 — Volumen adoptado:** nueva entrada "Volumen útil adoptado (litros)" con valor por defecto igual al Vu calculado del Módulo 2. El usuario puede modificarlo para usar el depósito comercial real. Todo el ciclo de bombeo (t_ll, t_v, T, n_real) y la altura útil Hn se calculan con este valor adoptado. El Módulo 4 recibe el Hn adoptado automáticamente.
+- **Exportación PDF rediseñada como HTML enriquecido:** el botón exporta un archivo `.html` autónomo que se abre en el navegador y se imprime/guarda como PDF con `Ctrl+P`. Diseño corporativo ELECNOR limpio (azul #003087 + naranja #F5A800), sin simbolos raros ni artefactos de codificacion.
+- **Logo ELECNOR desde archivo local:** el informe HTML referencia `logo.png` en la carpeta raíz. Si no existe, muestra el nombre ELECNOR en texto. Fallback limpio con `onerror`.
+- **Imagen del pozo:** el informe incluye `pozo.png` de la carpeta raíz en el módulo 4 junto a la tabla de geometría. Fallback con mensaje si no existe.
+- **Persistencia localStorage:** todos los datos introducidos (cantidades de aparatos, uso privado/público, nmax, diámetro, volumen adoptado, H1, H2, h, nmax2) se guardan automáticamente y se restauran al abrir la herramienta. Clave de almacenamiento: `calcPozoFecales_v24`.
+- Eliminada dependencia de jsPDF (ya no necesaria con el nuevo sistema de exportación HTML).
+- Letras con tilde y caracteres especiales reemplazados en el HTML de la app (interfaz dark) para evitar problemas de encoding. El informe exportado sí usa UTF-8 completo.
 
 ### v2.3 — 2026-06-17
 **Cambios — Exportación PDF corporativa ELECNOR:**
