@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora de Caudal de Drenaje - Fórmula C.3</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: system-ui, -apple-system, sans-serif; background: linear-gradient(135deg, #f8fafc, #eff6ff); min-height: 100vh; padding: 16px; }
+        .container { max-width: 600px; margin: 0 auto; }
+        .card { background: white; border-radius: 16px; border: 1px solid #e2e8f0; padding: 20px; margin-bottom: 12px; }
+        .card-compact { padding: 16px; }
+        h1 { font-size: 18px; font-weight: 700; color: #1e293b; margin: 0; }
+        h2 { font-size: 12px; font-weight: 600; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.05em; margin: 0 0 16px 0; }
+        p { margin: 0; font-size: 13px; color: #64748b; }
+        .subtitle { margin: 4px 0 0 0; }
+        svg { width: 100%; max-width: 460px; margin: 0 auto; display: block; border: 1px solid #e2e8f0; border-radius: 8px; background: white; }
+        .formula-box { background: #eff6ff; border: 1px solid #bfdbfe; border-radius: 12px; padding: 16px; margin-bottom: 12px; text-align: center; }
+        .formula-box p { font-size: 11px; font-weight: 600; color: #2563eb; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 8px; }
+        .formula-text { font-size: 13px; color: #1e293b; font-family: Georgia, serif; margin-bottom: 12px; }
+        .formula { display: flex; align-items: center; justify-content: center; gap: 8px; font-family: Georgia, serif; font-size: 14px; color: #1e293b; }
+        .formula-eq { font-size: 16px; font-weight: 700; }
+        .formula-fraction { display: flex; flex-direction: column; align-items: center; }
+        .formula-numerator { border-bottom: 2px solid #334155; padding-bottom: 4px; padding-left: 6px; padding-right: 6px; white-space: nowrap; }
+        .formula-denominator { padding-top: 4px; }
+        .form-group { margin-bottom: 14px; }
+        label { display: block; font-size: 12px; font-weight: 600; margin-bottom: 4px; }
+        .input-wrapper { display: flex; align-items: center; gap: 8px; }
+        input[type="number"] { flex: 1; border: 1px solid #e2e8f0; border-radius: 8px; padding: 8px 12px; font-size: 14px; outline: none; transition: border-color 0.2s; }
+        input[type="number"]:focus { border-color: #3b82f6; }
+        .input-unit { font-size: 12px; color: #94a3b8; min-width: 36px; text-align: right; }
+        .calc-info { background: #fef3c7; border-left: 4px solid #f59e0b; padding: 12px; border-radius: 6px; margin: 14px 0; font-size: 12px; color: #78350f; }
+        .calc-display { background: #f0fdf4; border: 1px solid #86efac; padding: 10px 12px; border-radius: 6px; margin-bottom: 14px; font-size: 12px; display: none; }
+        .error { background: #fef2f2; border: 1px solid #fecaca; color: #dc2626; font-size: 13px; border-radius: 8px; padding: 10px 14px; margin-bottom: 8px; display: none; }
+        .button-group { display: flex; gap: 10px; margin-top: 16px; }
+        button { border: none; border-radius: 10px; padding: 11px; font-size: 14px; font-weight: 600; cursor: pointer; transition: background 0.2s; }
+        .btn-primary { flex: 1; background: #2563eb; color: white; }
+        .btn-primary:hover { background: #1d4ed8; }
+        .btn-secondary { padding: 11px 18px; background: white; border: 1px solid #e2e8f0; color: #64748b; }
+        .btn-secondary:hover { background: #f8fafc; }
+        .btn-generate { width: 100%; margin-top: 10px; background: #059669; color: white; display: flex; align-items: center; justify-content: center; gap: 8px; }
+        .btn-generate:hover { background: #047857; }
+        .result-container { margin-bottom: 12px; }
+        .result-radius { background: #7c3aed; border-radius: 12px; padding: 14px 20px; color: white; margin-bottom: 12px; }
+        .result-radius p { font-size: 11px; color: #e9d5ff; text-transform: uppercase; letter-spacing: 0.05em; font-weight: 600; margin-bottom: 6px; }
+        .result-value { display: flex; align-items: baseline; gap: 10px; margin-bottom: 4px; }
+        .result-number { font-size: 24px; font-weight: 700; }
+        .result-unit { font-size: 15px; color: #e9d5ff; }
+        .result-formula { font-size: 11px; color: #e9d5ff; }
+        .result-unitario { background: linear-gradient(135deg, #1d4ed8, #2563eb); border-radius: 16px 16px 0 0; padding: 18px 20px 14px; color: white; }
+        .result-unitario p { font-size: 11px; color: #bfdbfe; text-transform: uppercase; letter-spacing: 0.05em; font-weight: 600; margin-bottom: 6px; }
+        .result-unitario .result-number { font-size: 28px; }
+        .result-unitario .result-unit { color: #93c5fd; }
+        .result-detail { font-size: 12px; color: #93c5fd; margin-top: 6px; }
+        .result-divider { background: #1e40af; padding: 6px 20px; display: flex; align-items: center; gap: 8px; }
+        .divider-line { flex: 1; height: 1px; background: rgba(255, 255, 255, 0.2); }
+        .divider-text { font-size: 11px; color: #bfdbfe; white-space: nowrap; }
+        .result-total { background: linear-gradient(135deg, #0f172a, #1e3a5f); border-radius: 0 0 16px 16px; padding: 14px 20px 18px; color: white; }
+        .result-total p { font-size: 11px; color: #7dd3fc; text-transform: uppercase; letter-spacing: 0.05em; font-weight: 600; margin-bottom: 6px; }
+        .result-total .result-number { font-size: 28px; color: #38bdf8; }
+        .result-total .result-unit { color: #7dd3fc; }
+        .result-total .result-detail { color: #7dd3fc; }
+        .result-chamber { background: #059669; border-radius: 12px; padding: 16px 20px; color: white; margin-top: 12px; }
+        .result-chamber p { font-size: 11px; color: #a7f3d0; text-transform: uppercase; letter-spacing: 0.05em; font-weight: 600; margin-bottom: 6px; }
+        .result-chamber .result-number { font-size: 28px; }
+        .result-chamber .result-unit { color: #a7f3d0; }
+        .result-chamber .result-detail { color: #a7f3d0; }
+        .label-ks { color: #374151; }
+        .label-h { color: #6d28d9; }
+        .label-h0 { color: #047857; }
+        .label-znf { color: #c026d3; }
+        .label-zdre { color: #ea580c; }
+        .label-l { color: #0e7490; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="card">
+            <h1>Calculadora de Caudal de Drenaje</h1>
+            <p class="subtitle">Fórmula C.3 — Arranque del muro sin alcanzar capa impermeable</p>
+        </div>
+
+        <!-- Diagram -->
+        <div class="card card-compact">
+            <h2 style="margin-bottom: 10px;">Figura C.1 — Esquema de parámetros</h2>
+            <svg viewBox="0 0 420 260" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                    <pattern id="hatch" patternUnits="userSpaceOnUse" width="10" height="10" patternTransform="rotate(45)">
+                        <line x1="0" y1="0" x2="0" y2="10" stroke="#94a3b8" stroke-width="0.8"/>
+                    </pattern>
+                    <marker id="arr" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto">
+                        <path d="M0,0 L0,6 L6,3 z" fill="#dc2626"/>
+                    </marker>
+                    <marker id="arrB" markerWidth="6" markerHeight="6" refX="1" refY="3" orient="auto">
+                        <path d="M6,0 L6,6 L0,3 z" fill="#dc2626"/>
+                    </marker>
+                </defs>
+                <rect x="90" y="0" width="330" height="228" fill="#f0f9ff"/>
+                <rect x="90" y="0" width="330" height="228" fill="url(#hatch)" opacity="0.35"/>
+                <rect x="0" y="228" width="420" height="32" fill="#57534e"/>
+                <text x="210" y="248" text-anchor="middle" font-size="10" fill="white" font-weight="bold">CAPA IMPERMEABLE</text>
+                <text x="310" y="170" text-anchor="middle" font-size="9" fill="#1e40af" font-weight="bold">CAPA FREÁTICA</text>
+                <rect x="28" y="0" width="32" height="196" fill="#94a3b8" stroke="#64748b" stroke-width="1.5"/>
+                <rect x="8" y="180" width="72" height="48" fill="#64748b" stroke="#475569" stroke-width="1.5"/>
+                <line x1="60" y1="28" x2="420" y2="28" stroke="#374151" stroke-width="1.5"/>
+                <line x1="60" y1="62" x2="420" y2="62" stroke="#2563eb" stroke-width="1.5"/>
+                <text x="418" y="59" font-size="8" fill="#2563eb" text-anchor="end">NF ORIGINAL</text>
+                <path d="M 84 108 Q 155 92 230 82 Q 310 73 420 69" stroke="#0891b2" stroke-width="1.5" fill="none" stroke-dasharray="5,3"/>
+                <text x="418" y="80" font-size="8" fill="#0891b2" text-anchor="end">NF MODIFICADO</text>
+                <circle cx="80" cy="192" r="6" fill="white" stroke="#1e40af" stroke-width="2"/>
+                <line x1="52" y1="30" x2="52" y2="190" stroke="#dc2626" stroke-width="1.3" marker-end="url(#arr)" marker-start="url(#arrB)"/>
+                <text x="42" y="114" font-size="12" fill="#dc2626" font-weight="bold" text-anchor="middle">P</text>
+                <line x1="120" y1="62" x2="120" y2="228" stroke="#7c3aed" stroke-width="1.3"/>
+                <line x1="114" y1="62" x2="126" y2="62" stroke="#7c3aed" stroke-width="1.3"/>
+                <line x1="114" y1="228" x2="126" y2="228" stroke="#7c3aed" stroke-width="1.3"/>
+                <text x="132" y="150" font-size="12" fill="#7c3aed" font-weight="bold">H</text>
+                <line x1="102" y1="192" x2="102" y2="228" stroke="#059669" stroke-width="1.3"/>
+                <line x1="96" y1="192" x2="108" y2="192" stroke="#059669" stroke-width="1.3"/>
+                <line x1="96" y1="228" x2="108" y2="228" stroke="#059669" stroke-width="1.3"/>
+                <text x="112" y="214" font-size="11" fill="#059669" font-weight="bold">h0</text>
+                <line x1="80" y1="214" x2="330" y2="214" stroke="#b45309" stroke-width="1.3"/>
+                <line x1="80" y1="208" x2="80" y2="220" stroke="#b45309" stroke-width="1.3"/>
+                <line x1="330" y1="208" x2="330" y2="220" stroke="#b45309" stroke-width="1.3"/>
+                <text x="205" y="226" font-size="12" fill="#b45309" font-weight="bold" text-anchor="middle">R</text>
+            </svg>
+        </div>
+
+        <!-- Formulas -->
+        <div class="formula-box">
+            <p>Fórmulas</p>
+            <div class="formula-text">
+                <strong>s = Z<sub>NF</sub> - Z<sub>drenaje</sub></strong><br>
+                <strong>R = 3000 · s · √Ks</strong>
+            </div>
+            <div class="formula">
+                <span class="formula-eq">q =</span>
+                <div class="formula-fraction">
+                    <div class="formula-numerator">Ks · [0,73 + 0,27 · (H - h0) / H] · (H² - h0²)</div>
+                    <div class="formula-denominator">2R</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Inputs -->
+        <div class="card">
+            <h2>Datos de entrada</h2>
+            
+            <div class="form-group">
+                <label class="label-ks">Ks — Coeficiente de permeabilidad</label>
+                <div class="input-wrapper">
+                    <input type="number" id="Ks" placeholder="ej. 1e-5" step="any">
+                    <span class="input-unit">m/s</span>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="label-h">H — Diferencia entre cara sup. capa impermeable y NF (antes de intervención)</label>
+                <div class="input-wrapper">
+                    <input type="number" id="H" placeholder="ej. 4.50" step="any">
+                    <span class="input-unit">m</span>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="label-h0">h0 — Diferencia entre cara sup. capa impermeable y NF en tubo drenante</label>
+                <div class="input-wrapper">
+                    <input type="number" id="h0" placeholder="ej. 1.20" step="any">
+                    <span class="input-unit">m</span>
+                </div>
+            </div>
+
+            <div class="calc-info">
+                <strong>Cálculo de s:</strong> s = Z<sub>drenaje</sub> - Z<sub>NF</sub> (el drenaje está siempre más profundo)
+            </div>
+
+            <div class="form-group">
+                <label class="label-znf">Z<sub>NF</sub> — Cota del Nivel Freático Original (desde superficie del terreno)</label>
+                <div class="input-wrapper">
+                    <input type="number" id="ZNF" placeholder="ej. 2.50" step="any">
+                    <span class="input-unit">m</span>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="label-zdre">Z<sub>drenaje</sub> — Cota de la solera de la cámara o tubo drenante (desde superficie terreno)</label>
+                <div class="input-wrapper">
+                    <input type="number" id="Zdrenaje" placeholder="ej. 3.50" step="any">
+                    <span class="input-unit">m</span>
+                </div>
+            </div>
+
+            <div id="valueS" class="calc-display">
+                <strong>s calculado:</strong> <span id="sValue">0.00</span> m = Z<sub>drenaje</sub> - Z<sub>NF</sub>
+            </div>
+
+            <div class="form-group">
+                <label class="label-l">L — Longitud del perímetro de muro drenante</label>
+                <div class="input-wrapper">
+                    <input type="number" id="L" placeholder="ej. 120" step="any">
+                    <span class="input-unit">m</span>
+                </div>
+            </div>
+
+            <div id="error" class="error"></div>
+
+            <div class="button-group">
+                <button class="btn-primary" onclick="calcular()">Calcular caudal q</button>
+                <button class="btn-secondary" onclick="limpiar()">Limpiar</button>
+            </div>
+
+            <button id="btnInforme" class="btn-generate" onclick="generarInforme()" style="display: none;">
+                <span>📄</span> Generar Informe HTML
+            </button>
+        </div>
+
+        <!-- Results -->
+        <div id="results" style="display: none;">
+            <div class="result-container">
+                <div class="result-radius">
+                    <p>Radio de acción del drenaje (calculado)</p>
+                    <div class="result-value">
+                        <span class="result-number">R = <span id="resultR">0.00</span></span>
+                        <span class="result-unit">m</span>
+                    </div>
+                    <p class="result-formula">Fórmula: R = 3000 · s · √Ks</p>
+                </div>
+
+                <div class="result-unitario">
+                    <p>Caudal unitario (por metro lineal)</p>
+                    <div class="result-value">
+                        <span class="result-number" id="resultQ">0.00000000</span>
+                        <span class="result-unit">m³/(s·m)</span>
+                    </div>
+                    <div class="result-detail" id="resultQDetail"></div>
+                </div>
+
+                <div class="result-divider">
+                    <div class="divider-line"></div>
+                    <span class="divider-text">× L = <span id="resultL">0</span> m</span>
+                    <div class="divider-line"></div>
+                </div>
+
+                <div class="result-total">
+                    <p>Caudal total (perímetro completo)</p>
+                    <div class="result-value">
+                        <span class="result-number" id="resultQTotal">0.000000</span>
+                        <span class="result-unit">m³/s</span>
+                    </div>
+                    <div class="result-detail" id="resultQTotalDetail"></div>
+                </div>
+
+                <div class="result-chamber">
+                    <p>Volumen de cámara de bombeo (Tabla 3.4)</p>
+                    <div class="result-value">
+                        <span class="result-number" id="resultVolumen">0.00</span>
+                        <span class="result-unit">m³</span>
+                    </div>
+                    <p class="result-detail" id="resultVolumenDetail"></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function calcularVolumenCamara(caudalLs) {
+            // Selección discreta según Tabla 3.4: ≤ valor → volumen
+            if (caudalLs <= 0.15) return 2.4;
+            if (caudalLs <= 0.31) return 2.85;
+            if (caudalLs <= 0.46) return 3.6;
+            if (caudalLs <= 0.61) return 3.9;
+            if (caudalLs <= 0.76) return 4.5;
+            if (caudalLs <= 1.15) return 5.7;
+            if (caudalLs <= 1.53) return 9.6;
+            if (caudalLs <= 1.91) return 10.8;
+            if (caudalLs <= 2.3) return 15;
+            if (caudalLs <= 3.1) return 20;
+            return 20; // Para valores > 3.1, se recomienda segunda cámara
+        }
+
+        function mostrarError(mensaje) {
+            const errorDiv = document.getElementById('error');
+            errorDiv.textContent = '⚠️ ' + mensaje;
+            errorDiv.style.display = 'block';
+        }
+
+        function ocultarError() {
+            document.getElementById('error').style.display = 'none';
+        }
+
+        function calcular() {
+            ocultarError();
+            
+            const ks = parseFloat(document.getElementById('Ks').value);
+            const h = parseFloat(document.getElementById('H').value);
+            const h0 = parseFloat(document.getElementById('h0').value);
+            const zNF = parseFloat(document.getElementById('ZNF').value);
+            const zdrenaje = parseFloat(document.getElementById('Zdrenaje').value);
+            const l = parseFloat(document.getElementById('L').value);
+
+            if (isNaN(ks) || isNaN(h) || isNaN(h0) || isNaN(zNF) || isNaN(zdrenaje) || isNaN(l)) {
+                mostrarError('Completa todos los campos con valores numéricos.');
+                return;
+            }
+
+            if (ks <= 0 || h <= 0 || l <= 0) {
+                mostrarError('Ks, H y L deben ser valores positivos.');
+                return;
+            }
+
+            if (h0 < 0) {
+                mostrarError('h0 no puede ser negativo.');
+                return;
+            }
+
+            if (h0 >= h) {
+                mostrarError('h0 debe ser menor que H.');
+                return;
+            }
+
+            const s = zdrenaje - zNF;
+            if (s <= 0) {
+                mostrarError('Z_drenaje debe ser mayor que Z_NF (el drenaje debe estar más profundo).');
+                return;
+            }
+
+            document.getElementById('sValue').textContent = s.toFixed(2);
+            document.getElementById('valueS').style.display = 'block';
+
+            // R = 3000 · s · √Ks
+            const r = 3000 * s * Math.sqrt(ks);
+            const bracket = 0.73 + 0.27 * ((h - h0) / h);
+            const q = (ks * bracket * (h * h - h0 * h0)) / (2 * r);
+            const qTotal = q * l;
+            const qTotalLs = qTotal * 1000;
+            const volumenCamara = calcularVolumenCamara(qTotalLs);
+
+            document.getElementById('resultR').textContent = r.toFixed(2);
+            document.getElementById('resultQ').textContent = q.toFixed(8);
+            document.getElementById('resultQDetail').textContent = 
+                '= ' + (q * 3600).toFixed(6) + ' m³/(h·m) | ' + 
+                (q * 86400).toFixed(4) + ' m³/(día·m) | ' + 
+                (q * 1000).toFixed(6) + ' L/(s·m)';
+            
+            document.getElementById('resultL').textContent = l;
+            document.getElementById('resultQTotal').textContent = qTotal.toFixed(6);
+            document.getElementById('resultQTotalDetail').textContent = 
+                '= ' + (qTotal * 3600).toFixed(4) + ' m³/h | ' + 
+                (qTotal * 86400).toFixed(2) + ' m³/día | ' + 
+                qTotalLs.toFixed(4) + ' L/s';
+            
+            document.getElementById('resultVolumen').textContent = volumenCamara.toFixed(2);
+            document.getElementById('resultVolumenDetail').textContent = 
+                'Dimensionado para caudal de ' + qTotalLs.toFixed(4) + ' L/s';
+
+            document.getElementById('results').style.display = 'block';
+            document.getElementById('btnInforme').style.display = 'flex';
+
+            window.lastResults = { ks, h, h0, zNF, zdrenaje, s, l, r, q, qTotal, qTotalLs, volumenCamara };
+        }
+
+        function limpiar() {
+            document.getElementById('Ks').value = '';
+            document.getElementById('H').value = '';
+            document.getElementById('h0').value = '';
+            document.getElementById('ZNF').value = '';
+            document.getElementById('Zdrenaje').value = '';
+            document.getElementById('L').value = '';
+            document.getElementById('results').style.display = 'none';
+            document.getElementById('btnInforme').style.display = 'none';
+            document.getElementById('valueS').style.display = 'none';
+            ocultarError();
+        }
+
+        function generarInforme() {
+            const r = window.lastResults;
+            const html = `<!DOCTYPE html><html lang="es"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Informe de Cálculo de Drenaje - CTE DB-HS5</title><style>* { margin: 0; padding: 0; box-sizing: border-box; } body { font-family: 'Calibri', 'Arial', sans-serif; line-height: 1.8; color: #2c3e50; background: #ecf0f1; padding: 20px; } .container { max-width: 960px; margin: 0 auto; background: white; padding: 50px; box-shadow: 0 2px 15px rgba(0,0,0,0.1); } .header { text-align: center; margin-bottom: 40px; border-bottom: 3px solid #1e40af; padding-bottom: 20px; } h1 { color: #1e40af; font-size: 26px; margin-bottom: 5px; } .meta { color: #7f8c8d; font-size: 12px; } h2 { color: #1e40af; margin-top: 35px; margin-bottom: 15px; font-size: 16px; border-left: 4px solid #1e40af; padding-left: 12px; } h3 { color: #34495e; font-size: 14px; margin-top: 20px; margin-bottom: 10px; } p { margin-bottom: 12px; text-align: justify; } .norm-ref { background: #fef3c7; border-left: 4px solid #f59e0b; padding: 12px; margin: 15px 0; font-size: 12px; color: #78350f; } .technical-note { background: #e8f4f8; border-left: 4px solid #0e7490; padding: 12px; margin: 15px 0; font-size: 12px; color: #0c5460; } .formula-box { background: #eff6ff; border: 1px solid #bfdbfe; border-left: 4px solid #1e40af; padding: 15px; margin: 20px 0; font-family: 'Courier New', monospace; } .result-box { background: #f0fdf4; border: 1px solid #86efac; border-left: 4px solid #16a34a; padding: 15px; margin: 15px 0; } table { width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 13px; } th, td { padding: 12px; text-align: left; border: 1px solid #bdc3c7; } th { background: #1e40af; color: white; font-weight: bold; } tr:nth-child(even) { background: #f8f9fa; } .highlight { background: #fff3cd; padding: 2px 4px; } .section { page-break-inside: avoid; margin-bottom: 35px; } .conclusion { background: #f0fdf4; border: 2px solid #16a34a; padding: 20px; margin: 20px 0; border-radius: 5px; } footer { margin-top: 50px; padding-top: 20px; border-top: 1px solid #bdc3c7; text-align: center; font-size: 11px; color: #7f8c8d; } @media print { body { background: white; } .container { box-shadow: none; } }</style></head><body><div class="container"><div class="header"><h1>INFORME DE CÁLCULO DE CAUDAL DE DRENAJE</h1><p class="meta"><strong>Método:</strong> Fórmula C.3 (CTE DB-HS5, Apéndice C)<br><strong>Fecha de emisión:</strong> ${new Date().toLocaleDateString('es-ES')}</p></div><div class="section"><h2>1. Descripción del Proyecto</h2><p>El presente informe documenta el cálculo del caudal de drenaje mediante el método establecido en el <span class="highlight">Código Técnico de la Edificación (CTE), Documento Básico HS-5 "Evacuación de aguas", Apéndice C</span>. Este método es aplicable a casos en los que <strong>el arranque del muro drenante no alcanza la capa impermeable</strong>.</p><div class="norm-ref"><strong>Referencia normativa:</strong> CTE DB-HS5, Sección 3.3 "Bombas de achique" y Apéndice C "Cálculo del caudal de drenaje en muros"</div></div><div class="section"><h2>2. Parámetros Geotécnicos de Entrada</h2><table><tr><th>Parámetro</th><th>Símbolo</th><th>Valor</th><th>Unidad</th><th>Descripción</th></tr><tr><td>Coef. permeabilidad</td><td>K<sub>s</sub></td><td>${r.ks}</td><td>m/s</td><td>Del estudio geotécnico</td></tr><tr><td>Profundidad - NF original</td><td>H</td><td>${r.h}</td><td>m</td><td>Desde superficie hasta capa impermeable</td></tr><tr><td>Profundidad - NF drenado</td><td>h₀</td><td>${r.h0}</td><td>m</td><td>Nivel freático con drenaje activo</td></tr><tr><td>Cota NF original</td><td>Z<sub>NF</sub></td><td>${r.zNF}</td><td>m</td><td>Desde superficie del terreno</td></tr><tr><td>Cota solera drenaje</td><td>Z<sub>drenaje</sub></td><td>${r.zdrenaje}</td><td>m</td><td>Profundidad de la cámara/tubo</td></tr><tr style="background: #fef3c7;"><td><strong>Espaciamiento</strong></td><td><strong>s</strong></td><td><strong>${r.s.toFixed(2)}</strong></td><td><strong>m</strong></td><td><strong>Radio de influencia efectivo</strong></td></tr><tr><td>Perímetro drenante</td><td>L</td><td>${r.l}</td><td>m</td><td>Longitud total del muro drenante</td></tr></table></div><div class="section"><h2>3. Cálculo del Espaciamiento (s)</h2><p>El espaciamiento <strong>s</strong> representa la profundidad vertical entre el Nivel Freático original y la solera del drenaje, determinando el radio de acción del sistema de drenaje.</p><div class="formula-box"><strong>s = Z<sub>drenaje</sub> - Z<sub>NF</sub></strong><br>s = ${r.zdrenaje} - ${r.zNF} = <strong>${r.s.toFixed(2)} m</strong></div><div class="technical-note"><strong>Nota técnica:</strong> El drenaje debe situarse siempre más profundo que el NF original. Según CTE DB-HS5, la solera debe ubicarse 20-30 cm bajo el pavimento terminado del sótano (20 cm mínimo por norma).</div></div><div class="section"><h2>4. Cálculo del Radio de Acción del Drenaje (R)</h2><p>El radio de acción determina la zona de influencia del sistema de drenaje, dependiendo de las características hidrogeológicas y del espaciamiento.</p><div class="formula-box"><strong>R = 3000 · s · √K<sub>s</sub></strong><br>R = 3000 · ${r.s.toFixed(2)} · √${r.ks}<br>R = <strong>${r.r.toFixed(2)} m</strong></div><div class="technical-note"><strong>Interpretación:</strong> Un radio de acción de ${r.r.toFixed(2)} m significa que el sistema de drenaje es efectivo en una zona de ${(r.r*2).toFixed(2)} m de ancho. Radios menores indican suelos de menor permeabilidad o espaciamientos reducidos.</div></div><div class="section"><h2>5. Cálculo del Caudal Unitario (q)</h2><p>El caudal unitario es el volumen de agua evacuada por unidad de tiempo y por metro lineal de muro.</p><div class="formula-box"><strong>q = K<sub>s</sub> · [0,73 + 0,27 · (H - h₀) / H] · (H² - h₀²) / (2R)</strong></div><div class="result-box"><strong>Caudal unitario:</strong><br>q = ${r.q.toFixed(8)} m³/(s·m)<br><br><strong>Conversiones:</strong><br>q = ${(r.q*3600).toFixed(6)} m³/(h·m)<br>q = ${(r.q*86400).toFixed(4)} m³/(día·m)<br>q = ${(r.q*1000).toFixed(6)} L/(s·m)</div><div class="technical-note"><strong>Coeficiente de caudal:</strong> El factor [0,73 + 0,27·(H-h₀)/H] representa la eficacia del drenaje, variando entre 0,73 (sin drenaje) y 1,0 (drenaje completo).</div></div><div class="section"><h2>6. Cálculo del Caudal Total (Q)</h2><p>El caudal total es el producto del caudal unitario por la longitud del perímetro drenante.</p><div class="formula-box"><strong>Q<sub>total</sub> = q · L</strong><br>Q<sub>total</sub> = ${r.q.toFixed(8)} · ${r.l}<br>Q<sub>total</sub> = <strong>${r.qTotal.toFixed(6)} m³/s</strong></div><div class="result-box"><strong>Caudal total (conversiones):</strong><br>Q<sub>total</sub> = ${(r.qTotal*3600).toFixed(4)} m³/h<br>Q<sub>total</sub> = ${(r.qTotal*86400).toFixed(2)} m³/día<br>Q<sub>total</sub> = <strong>${r.qTotalLs.toFixed(4)} L/s</strong></div></div><div class="section"><h2>7. Dimensionamiento de la Bomba de Achique</h2><p>Conforme a la CTE DB-HS5, Sección 3.3 "Bombas de achique", cada bomba debe dimensionarse para el caudal total calculado. La cámara de bombeo debe tener un volumen mínimo según la siguiente tabla:</p><table><tr><th>Caudal de la bomba (L/s)</th><th>Volumen mínimo cámara (m³)</th></tr><tr><td>0,15</td><td>2,4</td></tr><tr><td>0,31</td><td>2,85</td></tr><tr><td>0,46</td><td>3,6</td></tr><tr><td>0,61</td><td>3,9</td></tr><tr><td>0,76</td><td>4,5</td></tr><tr><td>1,15</td><td>5,7</td></tr><tr><td>1,53</td><td>9,6</td></tr><tr><td>1,91</td><td>10,8</td></tr><tr><td>2,3</td><td>15</td></tr><tr><td>3,1</td><td>20</td></tr></table><div class="result-box"><strong>Para caudal de ${r.qTotalLs.toFixed(4)} L/s:</strong><br><strong>Volumen mínimo recomendado: ${r.volumenCamara.toFixed(2)} m³</strong></div><div class="technical-note"><strong>Nota de diseño:</strong> Para caudales superiores a 3,1 L/s, se recomienda instalar una segunda cámara de bombeo. El tiempo de vaciado de la cámara no debe exceder 24 horas en condiciones normales.</div></div><div class="section"><h2>8. Recomendaciones de Diseño</h2><ul style="margin-left: 20px; line-height: 1.8;"><li><strong>Tuberías de drenaje:</strong> Material drenante (PVC perforado ó geotextil), diámetro mínimo 100 mm según CTE DB-HS5.</li><li><strong>Válvula de retención:</strong> Obligatoria en descarga para evitar reflujos (según RD 1027/2007).</li><li><strong>Mantenimiento:</strong> Inspección anual de la cámara y limpieza de bombas (RD 1027/2007, sobre instalaciones de bombeo).</li><li><strong>Redundancia:</strong> Se recomienda bomba de emergencia o sistema de rebose en caso de fallo.</li><li><strong>Descarga:</strong> Conectar a colector municipal o sistema de drenaje superficial con mínimo 0,5% de pendiente.</li></ul></div><div class="conclusion"><h3>Conclusiones Finales</h3><p><strong>Sistema de drenaje dimensionado:</strong></p><ul style="margin-left: 20px;"><li><strong>Caudal de diseño:</strong> ${r.qTotalLs.toFixed(4)} L/s (${(r.qTotal*3600).toFixed(4)} m³/h)</li><li><strong>Radio de acción:</strong> ${r.r.toFixed(2)} m</li><li><strong>Volumen cámara de bombeo:</strong> ${r.volumenCamara.toFixed(2)} m³ (Tabla 3.4, CTE DB-HS5)</li><li><strong>Perímetro drenante:</strong> ${r.l} m</li></ul><p style="margin-top: 15px;"><strong>El dimensionamiento de las bombas de achique cumple con la normativa CTE DB-HS5 y debe ejecutarse conforme a los planos de estructuras e instalaciones, asegurando la correcta conectividad con el sistema de evacuación general del edificio.</strong></p></div><footer><p>Informe generado automáticamente por Calculadora de Caudal de Drenaje | CTE DB-HS5, Apéndice C<br>Este documento es válido únicamente con los datos de entrada introducidos y es responsabilidad del proyectista verificar la aplicabilidad del método.</p></footer></div></body></html>`;
+            
+            const blob = new Blob([html], { type: 'text/html' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'informe_drenaje_cte.html';
+            a.click();
+            URL.revokeObjectURL(url);
+        }
+    </script>
+</body>
+</html>
