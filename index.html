@@ -10,9 +10,12 @@
       font-family: "Segoe UI", Arial, sans-serif;
       background: #0f172a;
       color: #e2e8f0;
+
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
     }
 
-    /* 🔷 Navbar */
     header {
       background: #1e293b;
       padding: 15px 30px;
@@ -27,19 +30,17 @@
       font-size: 20px;
     }
 
-    /* 🔷 Container */
     .container {
       padding: 30px;
+      flex: 1;
     }
 
-    /* 🔷 Sección */
     h2 {
       margin-top: 30px;
       border-bottom: 1px solid #334155;
       padding-bottom: 10px;
     }
 
-    /* 🔷 Grid */
     .grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
@@ -47,7 +48,6 @@
       margin-top: 20px;
     }
 
-    /* 🔷 Card */
     .card {
       background: #1e293b;
       padding: 20px;
@@ -86,6 +86,16 @@
       background: #2563eb;
     }
 
+    footer {
+      width: 100%;
+      background:#1e293b;
+      color:#94a3b8;
+      text-align:center;
+      padding:15px;
+      font-size:14px;
+      border-top:1px solid #334155;
+    }
+
   </style>
 </head>
 
@@ -102,66 +112,58 @@
   <div class="grid">
 
     <div class="card">
-  <h3>HS5 PB SAN</h3>
-  <p>Pozo Bombeo Fecales saneamiento</p>
-  <a href="APP_1.Calc.PB_SAN/" class="btn">Abrir</a>
-</div>
+      <h3>HS5 PB SAN</h3>
+      <p>Pozo Bombeo Fecales saneamiento</p>
+      <a href="APP_1.Calc.PB_SAN/" class="btn">Abrir</a>
+    </div>
 
-<div class="card">
-  <h3>HS1 PB NF</h3>
-  <p>Pozo Bombeo Nivel Freático_HS1</p>
-  <a href="APP_2.Calc.PB_NF/" class="btn">Abrir</a>
-</div>
+    <div class="card">
+      <h3>HS1 PB NF</h3>
+      <p>Pozo Bombeo Nivel Freático_HS1</p>
+      <a href="APP_2.Calc.PB_NF/" class="btn">Abrir</a>
+    </div>
 
-<div class="card">
-  <h3>HID Bombas Múltiples</h3>
-  <p>Cálculos hidráulicos Curvas Bombas</p>
-  <a href="APP_3.Calc.B.HID_Multiples/" class="btn">Abrir</a>
-</div>
+    <div class="card">
+      <h3>HID Bombas Múltiples</h3>
+      <p>Cálculos hidráulicos Curvas Bombas</p>
+      <a href="APP_3.Calc.B.HID_Multiples/" class="btn">Abrir</a>
+    </div>
 
-<div class="card">
-  <h3>Caudales Agua AA</h3>
-  <p>Cálculo de caudales de agua climatización</p>
-  <a href="APP_4.Calc.Caudales-AA/" class="btn">Abrir</a>
-</div>
+    <div class="card">
+      <h3>Caudales Agua AA</h3>
+      <p>Cálculo de caudales de agua climatización</p>
+      <a href="APP_4.Calc.Caudales-AA/" class="btn">Abrir</a>
+    </div>
 
-<div class="card">
-  <h3>Piscina Full</h3>
-  <p>Herramienta completa Filtración</p>
-  <a href="APP_5.1.Calc.HID_Piscina_Full/" class="btn">Abrir</a>
-</div>
+    <div class="card">
+      <h3>Piscina Full</h3>
+      <p>Herramienta completa Filtración</p>
+      <a href="APP_5.1.Calc.HID_Piscina_Full/" class="btn">Abrir</a>
+    </div>
 
-<div class="card">
-  <h3>Piscinas</h3>
-  <p>Cálculo básico Filtración</p>
-  <a href="APP_5.Calc.HID_Piscinas/" class="btn">Abrir</a>
-</div>
+    <div class="card">
+      <h3>Piscinas</h3>
+      <p>Cálculo básico Filtración</p>
+      <a href="APP_5.Calc.HID_Piscinas/" class="btn">Abrir</a>
+    </div>
 
-  <div class="container">
+  </div>
 
-  <!-- 🔵 Protección y Puesta a Tierra -->
+  <!-- 🔵 Protección -->
   <h2>Protección y Puesta a Tierra</h2>
   <div class="grid">
-    
+
     <div class="card">
-  <h3>SUA8 Pararrayos</h3>
-  <p>Cálculo SUA8: Necesidad Pararrayos</p>
-  <a href="APP_6.Calc.SUA8_Pararrayos/" class="btn">Abrir</a>
-</div>
-    
+      <h3>SUA8 Pararrayos</h3>
+      <p>Cálculo SUA8: Necesidad Pararrayos</p>
+      <a href="APP_6.Calc.SUA8_Pararrayos/" class="btn">Abrir</a>
+    </div>
+
   </div>
 
 </div>
 
-<footer style="
-  background:#1e293b;
-  color:#94a3b8;
-  text-align:center;
-  padding:15px;
-  font-size:14px;
-  margin-top:40px;
-  border-top:1px solid #334155;
-">
+<footer>
   <p>⚙️ Apps MEP</p>
   <p id="version"></p>
   <p>Desarrollado por rpulido_ELECNOR SA · © 2026</p>
