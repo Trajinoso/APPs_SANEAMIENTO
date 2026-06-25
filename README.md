@@ -1,4 +1,4 @@
-**Este es el archivo `README.md` principal (*root*) para tu repositorio global de utilidades hidráulicas y aplicaciones MEP. Está estructurado de manera profesional, sirviendo como índice unificado para los diferentes módulos que has desarrollado.**
+**Este es el archivo `README.md` principal (*root*) para el repositorio global de utilidades y aplicaciones MEP. Está estructurado de manera fucinal, sirviendo como índice unificado para los diferentes módulos que se van desarrollando.**
 
 ---
 ## 📂 Índice de Aplicaciones y Módulos
