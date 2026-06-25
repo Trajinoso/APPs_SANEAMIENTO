@@ -8,4 +8,3 @@ Pequeñas APPs para el cálculo de pozos de bombeo y otros cálculos sobre insta
 * [APP Cálculo Caudales AA para refrigeración](./APP_4.Calc.Caudales-AA/)
 * [APP Cálculo Hidráulico Piscinas](./APP_5.Calc.HID_Piscinas/)
 * [APP_Cálculo Hidráulico Piscinas Full con información](./APP_5.1.Calc.HID_Piscina Full/)
-  
