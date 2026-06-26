@@ -1,5 +1,4 @@
 ---
-
 # CALCULADORA AVANZADA MEP: DESHUMECTACIÓN Y POTENCIA TÉRMICA EN PISCINAS
 
 **ID_INFORME:** ITR.CDP_260626-01 | **VERSIÓN:** 1.4
@@ -65,8 +64,6 @@ Justificación del cálculo de potencia de choque (sensible) basada en volumen, 
 
 *(Pendiente de aprobación)*
 
----
 
-⚠️ ESPERANDO ACEPTACIÓN TÉCNICA. Por favor, revisa los puntos anteriores y escribe 'ACEPTO INFORME' para proceder con el código, o indica los cambios necesarios. En caso de aceptar el informe, solicita también el lenguaje en cual se hará el código.
 
 
