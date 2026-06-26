@@ -1,35 +1,19 @@
 # ENTORNO DE INSTALACIONES MEP: CALCULADORA DE DESHUMECTACIÓN Y TÉRMICA DE PISCINAS
-**ID_INFORME:** ITR.CDP_260626-01 | **VERSIÓN:** 1.2  
+**ID_INFORME:** ITR.CDP_260626-01 | **VERSIÓN:** 1.4  
 **ESTADO:** ACEPTADO E IMPLEMENTADO
 
-Este repositorio contiene la herramienta profesional autocontenida para el dimensionado mecánico y de fluidos en piscinas cubiertas climatizadas (natatorios), garantizando trazabilidad completa desde los requisitos técnicos hasta las ecuaciones de balance de masa y energía.
+Este repositorio contiene la herramienta web autocontenida (SPA) para el dimensionado mecánico y de fluidos en piscinas cubiertas (natatorios). El aplicativo garantiza una trazabilidad completa desde los requisitos técnicos hasta las ecuaciones aplicadas de balance de masa y energía térmica.
 
 ## HISTORIAL ACUMULADO DE INFORMES TÉCNICOS (ITR)
 
-### Versión 1.0 - Balance de Masa Básico
-* **Alcance:** Modelado analítico de la carga latente de deshumectación ($\dot{m}_{total}$) considerando evaporación libre superficial, ocupación y caudal de renovación exterior.
-* **Normativa:** ASHRAE Handbook (Natatoriums), RITE.
-
-### Versión 1.1 - Balance de Energía Térmica
-* **Alcance:** Adición del módulo de transferencia de calor para el agua del vaso. Diferenciación entre la potencia de arranque inicial (sensible en función del tiempo de puesta en régimen) y potencia de mantenimiento continuo (pérdidas latentes por evaporación + pérdidas por transmisión estructural).
-
-### Versión 1.2 - Optimización Geométrica y Psicrometría Vectorial (Versión Actual)
-* **Cambio Geométrico:** Sustitución de la entrada manual de volumen por el cálculo automatizado en función de la profundidad media del vaso ($V = A \cdot h_{vaso}$).
-* **Lógica de Ventilación:** Corrección algebraica según la ecuación exacta del flujo de masa de agua extraído o introducido por la ventilación:
-    $$\dot{m}_v = Q_v \cdot \rho_{aire} \cdot (x_i - x_e)$$
-    Donde si el aire exterior es más seco ($x_i > x_e$), la ventilación actúa con un vector de secado favorable reduciendo de forma neta la carga demandada a la deshumectadora frigorífica.
-* **Motor Psicrométrico:** Implementación de las ecuaciones de estado basadas en la formulación de Magnus-Tetens para la obtención automática de humedades absolutas sin requerir ábacos manuales.
-
----
-
-## BITÁCORA DE CAMBIOS (CHANGELOG)
-* **v1.0 (26/06/2026):** Definición de variables base y coeficientes de actividad de la lámina de agua.
-* **v1.1 (26/06/2026):** Interconexión de la tasa de evaporación libre con las necesidades de intercambio de placas térmicas.
-* **v1.2 (26/06/2026):** Refactorización del balance psicrométrico de ventilación a formato algebraicó neta y automatización de volumen del vaso por cota hidráulica.
+* **Versión 1.0 - Balance de Masa Básico:** Modelado analítico de la carga latente de deshumectación considerando evaporación libre superficial, ocupación y caudal de renovación exterior (ASHRAE).
+* **Versión 1.1 - Balance de Energía Térmica:** Adición del módulo de transferencia de calor para el agua del vaso (potencia de arranque inicial vs. mantenimiento).
+* **Versión 1.2 - Optimización Geométrica y Psicrometría Vectorial:** Cálculo automático de volumen ($V = A \cdot h_{vaso}$) y corrección algebraica del aire exterior para evaluar su vector de secado (resta carga si es más seco, suma si es más húmedo) mediante formulación de Magnus-Tetens.
+* **Versión 1.3 - Estándar VDI 2089:** Implementación de la norma alemana VDI 2089. La evaporación se calcula en base al salto de humedad absoluta en g/kg y coeficientes de agitación $\beta$ (0.5 a 4.0).
+* **Versión 1.4 - Prontuario Técnico Integrado (Versión Actual):** Cancelación del sub-módulo Free-Drying. Transformación de la pestaña de auditoría en un Prontuario Técnico Interactivo. Se exponen y justifican matemáticamente (vía MathJax) todas las fórmulas de estado psicrométrico, balances latentes y sensibles.
 
 ---
 
 ## STACK TECNOLÓGICO
-* **Frontend:** HTML5 Semántico y CSS3 con optimización de hojas de estilo para impresión A4 (Ingeniería Report-Ready).
-* **Cálculo:** JavaScript ES6 Nativo (Vanilla JS) sin dependencias de servidor.
-* **Renderizado Matemático:** MathJax v3 para visualización de ecuaciones dinámicas en LaTeX.
+* **Frontend y Lógica:** HTML5, CSS3, Vanilla JS (Cálculos ejecutados en local, sin dependencias de servidor).
+* **Renderizado Matemático:** MathJax v3 para visualización de ecuaciones analíticas dinámicas y estáticas en LaTeX.
